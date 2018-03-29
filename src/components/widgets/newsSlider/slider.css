@@ -1,0 +1,26 @@
+.featureItem {
+    position: relative;
+}
+
+.featureItem a {
+    width: 100%;
+    bottom: 0;
+    text-decoration: none;
+    right: 0px;
+    position: absolute;
+}
+
+.featureImage {
+    height: 330px;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+}
+
+.featureCaption {
+    color: #fff;
+    top: 0px;
+    padding: 20px;
+    font-size: 28px;
+    font-weight: 300;
+    box-sizing: border-box;
+}
