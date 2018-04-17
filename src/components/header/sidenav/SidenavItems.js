@@ -1,32 +1,84 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import FontAwesome from "react-fontawesome";
+import { firebase } from "../../../firebase";
 
 import style from "./sidenav.css";
 
-const SidenavItems = () => {
-    const items = [
-        { type: style.option, icon: "home", text: "Home", link: "/" },
-        { type: style.option, icon: "file-text-o", text: "News", link: "/news" },
-        { type: style.option, icon: "play", text: "Videos", link: "/videos" },
-        { type: style.option, icon: "sign-in", text: "Sign in", link: "/sign-in" },
-        { type: style.option, icon: "sign-out", text: "Sign out", link: "/sign-out" }
-    ];
+const SidenavItems = props => {
+  const items = [
+    { type: style.option, icon: "home", text: "Home", link: "/" },
+    { type: style.option, icon: "file-text-o", text: "News", link: "/news" },
+    { type: style.option, icon: "play", text: "Videos", link: "/videos" },
+    { type: style.option, icon: "dashboard", text: "Dashboard", link: "/dashboard" },
+    {
+      type: style.option,
+      icon: "sign-in",
+      text: "Sign in",
+      link: "/sign-in",
+      login: true
+    },
+    {
+      type: style.option,
+      icon: "sign-out",
+      text: "Sign out",
+      link: "/sign-out",
+      login: false
+    }
+  ];
 
-    const showItems = () => {
-        return items.map((item, i) => {
-            return (
-                <div key={i} className={item.type}>
-                    <Link to={item.link}>
-                        <FontAwesome name={item.icon} />
-                        {item.text}
-                    </Link>
-                </div>
-            );
-        });
-    };
+  const element = (item, i) => (
+    <div key={i} className={item.type}>
+      <Link to={item.link}>
+        <FontAwesome name={item.icon} />
+        {item.text}
+      </Link>
+    </div>
+  );
 
-    return <div>{showItems()}</div>;
+  const restrict = (item, i) => {
+    let template = null;
+
+    if (props.user === null && item.login) {
+      template = element(item, i);
+    }
+
+    if (props.user !== null && !item.login) {
+      if (item.link === "/sign-out") {
+        template = (
+          <div
+            key={i}
+            className={item.type}
+            onClick={() => {
+              firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                  props.history.push("/");
+                });
+            }}
+          >
+            <Link to={item.link}>
+              <FontAwesome name={item.icon} />
+              {item.text}
+            </Link>
+          </div>
+        );
+      } else {
+        template = element(item, i);
+      }
+    }
+
+    return template;
+  };
+
+  const showItems = () => {
+    return items.map((item, i) => {
+      return item.login !== "" ? restrict(item, i) : element(item, i);
+    });
+  };
+
+  return <div>{showItems()}</div>;
 };
 
-export default SidenavItems;
+export default withRouter(SidenavItems);

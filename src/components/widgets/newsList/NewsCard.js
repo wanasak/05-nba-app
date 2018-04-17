@@ -2,15 +2,20 @@ import React from "react";
 import { Label } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import FontAwesome from "react-fontawesome";
+import moment from "moment";
 
 import styles from "./newsList.css";
 
 const NewsCard = props => {
     const teamName = (team) => {
         let data = props.teams.find(item => {
-            return item.id === team;
+            return item.teamId === team;
         });
         return data ? data.name : "";
+    }
+
+    const formatDate = date => {
+        return moment(date).format(" MM-DD-YYYY");
     }
 
     return (
@@ -21,7 +26,7 @@ const NewsCard = props => {
                 </span>
                 <span className={styles.cardDate}>
                     <FontAwesome name="clock-o" className={styles.cardIcon} />
-                    {props.item.date}
+                    {formatDate(props.item.date)}
                 </span>
             </div>
             <div>

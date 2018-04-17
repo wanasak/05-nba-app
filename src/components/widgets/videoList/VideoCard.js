@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import styles from "./videoList.css";
 import FontAwesome from "react-fontawesome";
 import { Label } from "react-bootstrap";
+import moment from "moment";
+
+const formatDate = date => {
+    return moment(date).format(" MM-DD-YYYY");
+}
 
 const VideoCard = props => {
     const teamName = team => {
@@ -40,7 +45,7 @@ const VideoCard = props => {
                                     name="clock-o"
                                     className={styles.cardIcon}
                                 />
-                                {item.date}
+                                {formatDate(item.date)}
                             </span>
                         </div>
                         <div>
